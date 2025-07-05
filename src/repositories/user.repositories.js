@@ -1,4 +1,4 @@
-import db from "../config/database";
+import db from "../config/database.js";
 
 db.run(`
     CREATE TABLE IF NOT EXISTS users (
@@ -8,22 +8,24 @@ db.run(`
         password TEXT NOT NULL,
         avatar TEXT 
     )
-    `);
+`);
 
 function createUserRepository(newUser) {
-  return new Promise((res, rej) => {
-    const {username, email, password, avatar} = newUser
+  return new Promise((resolve, reject) => {
+    const { username, email, password, avatar } = newUser;
+
     db.run(
       `
         INSERT INTO users (username, email, password, avatar)
-        VALUES {?, ?, ?, ?}
+        VALUES (?, ?, ?, ?)
       `,
-      [username, emai, password, avatar],
-      (err) => {
-        if(err) {
-            rej(err)
+      [username, email, password, avatar], 
+      function (err) {
+        if (err) {
+          reject(err);
         } else {
-         res({message: 'User created'})
+          // 'this' aqui se refere ao Statement, então usamos function() {} e não arrow function
+          resolve({ id: this.lastID, ...newUser }); 
         }
       }
     );
@@ -31,5 +33,5 @@ function createUserRepository(newUser) {
 }
 
 export default {
-    createUserRepository
-}
+  createUserRepository,
+};
