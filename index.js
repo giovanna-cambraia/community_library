@@ -1,18 +1,18 @@
 import express from 'express';
-import userRouters from './src/routes/user.routes.js'
+import userRouters from './src/routes/user.routes.js';
+import bookRouters from './src/routes/book.routes.js';
+import loanRouters from './src/routes/loan.routes.js'
+import "dotenv/config";
+import "./src/service/cron.service.js"
 const app = express();
 
 app.use(express.json());
 app.use(userRouters);
+app.use(bookRouters);
+app.use(loanRouters);
 
+const port = process.env.PORT || 3000
 
-// METHOD (API REST) => GET, POST, PUT, DELETE
-// METHOD (API RESTful) => GET, POST, PUT/PATCH, DELETE
-
-// NAME => / - sempre no plural
-
-// CALLBACK FUNCTIONS => Onde executamos o backend (logic, etc)
-
-app.listen(3000, () => {
-    console.log("Server is running on port 3000")
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
 });
